@@ -35,6 +35,14 @@
                 <span class="id-column"><%= item.id %></span>
                 <span class="name-column"><%= item.name %></span>
               </div>
+              <div class="item-menu">
+                <!-- /:id　ルーティングURLにルートパラメータを指定 -->
+                <form action="/delete/ <%= item.id %>" method="POST">
+                  <input type="submit" value="削除">
+                </form>
+
+                <a href="/edit/<%= item.id %>">編集</a>
+              </div>
             </li>
           <% }) %>
         </ul>

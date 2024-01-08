@@ -43,13 +43,28 @@ app.get('/new', (req, res) => {
 //req.body.itemNameに「とまと」が入る
 app.post('/create', (req, res) =>{
     //メモを追加する処理
+    //フォームからの値をクエリに使うときは、VALUESに「?」。次に「connection.query()」の第2引数に渡したい配列を指定。この配列の要素が「?」の部分に入り実行。 
+    //第1引数：itemsテーブルのnameカラムにフォームの値を追加するクエリ。ただし、nameカラムに追加する値には?を使用。
     connection.query(
+   'INSERT INTO items (name) VALUES (?)',
+      [req.body.itemName],
+      (error, results) => {
+        //クエリ実行後の処理 ＝＞　リロードするとアイテムが増えるので削除
+        // connection.query(
+        //   'SELECT * FROM items',
+        //     (error, results) => {
+        //     res.render('index.ejs', {items: results});
+        //   }
+        // );  
+        res.redirect('/index');
+      }
+    );
 
-    )
 
     //フォームの値を取得する
-    console.log(req.body.itemName);
-    //一覧画面を表示する処理
+    // console.log(req.body.itemName);
+
+    //一覧画面を表示する処理　＝＞削除
     // connection.query(
     //     'SELECT * FROM items',
     //     (error, results) => {
@@ -59,5 +74,30 @@ app.post('/create', (req, res) =>{
         
 });
 
+//メモを削除
+app.post('/delete/:id', (req, res) =>{
+  //req.params.ルートパラメータ名でルートパラメータの値を受け取れる
+  // console.log(req.params.id);
+  connection.query(
+    'DELETE FROM items WHERE id = ?',
+    [req.params.id],
+    (error, results) =>{
+      res.redirect('/index');
+    }
+  );
+});
+
+//メモを更新
+app.get('/edit/:id', (req, res) =>{
+  connection.query(
+    // 選択されたメモをデータベースから取得する処理
+    'SELECT * FROM items WHERE id = ?',
+    [req.params.id],
+    (error, results) =>{
+      //クエリの取得結果は件数に関わらず配列になる。配列resultsから1件目の要素を取り出し、edit.ejsにitemプロパティを渡す
+      res.render('edit.ejs', {item: results[0]});
+    }
+  );
+});
 
 app.listen(3000);
