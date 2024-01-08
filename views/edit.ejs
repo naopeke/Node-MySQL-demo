@@ -21,6 +21,10 @@
           <input type="text" value="<%= item.name %>">
           <input type="submit" value="更新する">
         </form>
+        <form action="/update/<%= item.id %>" method="post">
+            <!-- name属性を追加してフォームの値を送信 -->
+            <input type="text" name="itemName" value="<%= item.id %>">
+        </form>
       </div>
       <a href="/index" class="cancel-button"></span>もどる</a>
     </div>

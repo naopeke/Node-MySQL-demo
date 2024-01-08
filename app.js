@@ -87,7 +87,7 @@ app.post('/delete/:id', (req, res) =>{
   );
 });
 
-//メモを更新
+//メモを編集
 app.get('/edit/:id', (req, res) =>{
   connection.query(
     // 選択されたメモをデータベースから取得する処理
@@ -96,6 +96,19 @@ app.get('/edit/:id', (req, res) =>{
     (error, results) =>{
       //クエリの取得結果は件数に関わらず配列になる。配列resultsから1件目の要素を取り出し、edit.ejsにitemプロパティを渡す
       res.render('edit.ejs', {item: results[0]});
+    }
+  );
+});
+
+//メモを更新
+app.post('/update/:id', (req, res) =>{
+  //req:{body:{itemName:'とまと'}} 
+  connection.query(
+    //メモのidはルートパラメータとparamsで受け渡す。更新する値はフォームとbodyで受け渡す
+    'UPDATE items SET name = ? WHERE id = ?',
+    [req.body.itemName, req.params.id],
+    (error, results) => {
+      res.redirect('/index');
     }
   );
 });
